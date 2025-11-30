@@ -25,13 +25,20 @@ def main():
     try:
         # Load AI Model and Transcribe
         transcriber = Transcriber()
-        segments = transcriber.transcribe(input_path)
+        segments, transcript_text = transcriber.transcribe(input_path)
 
         if not segments:
             print("Error: No speech detected.")
             print("Cause: The AI found no valid English sentences longer than 0.5s.")
             sys.exit(0)
 
+        base_name, _ = os.path.splitext(input_path)
+        transcript_path = f"{base_name}_transcript.txt"
+        
+        print(f"Saving transcript to: {transcript_path}")
+        with open(transcript_path, "w", encoding="utf-8") as f:
+            f.write(transcript_text.strip())
+            
         # Load Audio for Processing
         builder = AudioBuilder(input_path)
         final_track = AudioSegment.empty()
@@ -49,6 +56,7 @@ def main():
         final_track.export(output_path, format="mp3")
         
         # Silent success (script ends)
+        print(f"Done! Created: {output_path}")
 
     except FileNotFoundError:
         print("Error: System dependency missing.")

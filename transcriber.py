@@ -25,7 +25,8 @@ class Transcriber:
             if duration >= Config.MIN_SEGMENT_DURATION:
                 valid_segments.append({
                     'start': segment['start'],
-                    'end': segment['end']
+                    'end': segment['end'],
+                    'text': segment['text'].strip() # Store text for potential future use
                 })
                 
-        return valid_segments
+        return valid_segments, result["text"]
